@@ -9,15 +9,25 @@ The purpose of this application is to demonstrate CRUD functionalities mimicking
 
 ---
 
+# Inside src directory
+
 1. Follow Step 1 to create your Firebase Project and registration: https://firebase.google.com/docs/web/setup
 2. Rename .firebaserc.example to .firebaserc and replace ENTER_YOUR_FIREBASE_PROJECTID_HERE with your projectId from the Project settings at your Firebase Console.
 3. In the Firebase console, head to Authentication -> Sign-in Method. Select Google as the provider and click enable and save.
-4. Next, head to Firebase Firestore, and click Create database, and start in production mode. Select location you want, and click enable.
-5. In Firebase Firestore, head to Rules, and delete false in line 5, and paste 'request.auth != null;' Click publish. Do the same for Firebase Storage.
-6. Rename .env.example to .env and replace all ENTER_YOUR_FIREBASE with your Project's settings. It should be found at SDK setup and configuration for npm.
-7. In your terminal, run 'npm install'.
-8. Next, run 'npm update --force' to fix any dependency issues.
-9. Finally, run 'npm start'.
+4. In Firebase Storage, head to Rules, and delete false in line 5, and paste 'request.auth != null;' Click publish.
+5. Rename .env.example to .env and replace all ENTER_YOUR_FIREBASE with your Project's settings. It should be found at SDK setup and configuration for npm.
+6. In your terminal, run 'npm install'.
+7. Next, run 'npm update --force' to fix any dependency issues.
+8. Finally, run 'npm start'.
+
+# Inside server directory
+
+1. Go to https://www.mongodb.com/atlas and create a database.
+2. Create yourself a user to access the database.
+3. Grab your connection string.
+4. rename .env.example to .env and replace the CONNECTION_STRING with yours.
+5. Run 'npm install'.
+6. Finally, run 'nodemon index.js'
 
 # Getting Started with Create React App
 
