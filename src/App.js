@@ -40,7 +40,7 @@ return (
         <Route path='otherusersposts' element={ <OtherUsersPosts/>} />
       </Routes>
       <Widgets/>
-      <ChatContainer/>
+      {/*<ChatContainer/>*/}
       </div>
       </>
     )}

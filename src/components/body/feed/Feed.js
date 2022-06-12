@@ -5,6 +5,7 @@ import MessageSender from './messagesender/MessageSender'
 import Post from './post/Post'
 import db from '../../../firebase/firebase'
 import FlipMove from 'react-flip-move'
+import axios from 'axios'
 
 function Feed() {
     const [posts,setPosts] = useState([]);
@@ -13,9 +14,10 @@ function Feed() {
         let isMounted = true;
         
         if (isMounted) {
-            db.collection("posts").orderBy('timestamp', 'desc').onSnapshot((snapshot) => 
+            /*db.collection("posts").orderBy('timestamp', 'desc').onSnapshot((snapshot) => 
             setPosts(snapshot.docs.map((doc) => ({ id: doc.id, data: doc.data()})))
-            );
+            );*/
+            fetchPosts()
         }
 
         return () => { 
@@ -23,6 +25,12 @@ function Feed() {
         };
     },[]);
     
+    async function fetchPosts() {
+        const res = await axios.get('/api/posts')
+        console.log(res.data)
+        setPosts(res.data.data)
+    }
+
     return (
         <div className="feed_container">
             <StoryReel/>
@@ -30,15 +38,15 @@ function Feed() {
             {posts.map((post) => (
                 <FlipMove typeName={null}>
                     <Post
-                        key = {post.id}
-                        id = {post.id}
-                        profilePic = {post.data.profilePic}
-                        message = {post.data.message}
-                        timestamp = {post.data.timestamp}
-                        username = {post.data.username}
-                        image = {post.data.image}
-                        favourite = {post.data.favourite}
-                        userId = {post.data.userId}
+                        key = {post._id}
+                        id = {post._id}
+                        profilePic = {post.profilePic}
+                        message = {post.message}
+                        timestamp = {post.createdAt}
+                        username = {post.username}
+                        image = {post.image}
+                        favourite = {post.favourite}
+                        userId = {post.userId}
                     />
                 </FlipMove>
             ))}

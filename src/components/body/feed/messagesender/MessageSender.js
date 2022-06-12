@@ -10,8 +10,8 @@ import {getDownloadURL, uploadBytes} from 'firebase/storage'
 import {useSelector} from 'react-redux'
 import PopupAttachment from '../../popupattachment/PopupAttachment'
 import ErrorPopUp from '../../error/ErrorPopUp'
-import {AddPostWithGifToFirebaseCollection, AddPostWithImageToFirebaseCollection, AddPostWithoutImageToFirebaseCollection} from '../../../../functions/Add'
-import UploadPostsWithGif from '../../../../functions/Upload'
+import axios from 'axios'
+
 
 function MessageSender() {
   const user = useSelector((state) => state.user)
@@ -25,6 +25,8 @@ function MessageSender() {
   const [error, setError] = useState(false)    
   const popupRef = useRef()    
   const errorPopUpRef = useRef()   
+  const storageRef = firebase.storage();
+
 
   const resetState = () => {
     setInput('');  
@@ -52,20 +54,79 @@ function MessageSender() {
     {/* Submit differently if file is uploaded */}
     if (imageUrl) {
       if(fileType === 'image/gif') {        
-        UploadPostsWithGif('add', fileName, imageUrl, 'posts', null, input, user.picture, user.name, fav, true, user.id)
+        AddPostsWithGif()
       } else {            
-          uploadBytes(store, imageUrl).then(snapshot => {            
-            return getDownloadURL(snapshot.ref)            
-          }).then(downloadURL => {            
-            AddPostWithImageToFirebaseCollection(input, user.picture, user.name, downloadURL, fav, false, user.id)
-          }
-          )
+        AddPostsWithImage()
       }              
     } else {              
-        AddPostWithoutImageToFirebaseCollection(input, user.picture, user.name, fav, false, user.id)
+       AddPostsWithoutImages()
       } 
       resetState();            
   } 
+
+  async function AddPostsWithGif() {
+
+    let store = storageRef.ref(`/posts/${fileName}`);
+    uploadBytes(store, imageUrl).then(snapshot => {
+      return getDownloadURL(snapshot.ref)
+    }).then( async (downloadURL) => {
+  
+      const res = await axios.post('/api/post', {
+        message: input,
+        profilePic: user.picture,
+        username: user.name,
+        userId: user.id,
+        image: downloadURL,
+        gif: true
+      })
+      .then(function (response) {
+        console.log(response);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+    })
+    }
+
+  async function AddPostsWithImage() {
+
+  let store = storageRef.ref(`/posts/${fileName}`);
+  uploadBytes(store, imageUrl).then(snapshot => {
+    return getDownloadURL(snapshot.ref)
+  }).then( async (downloadURL) => {
+
+    const res = await axios.post('/api/post', {
+      message: input,
+      profilePic: user.picture,
+      username: user.name,
+      userId: user.id,
+      image: downloadURL
+    })
+    .then(function (response) {
+      console.log(response);
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+  })
+  }
+
+  async function AddPostsWithoutImages() {
+    const res = await axios.post('/api/post', {
+      message: input,
+      profilePic: user.picture,
+      username: user.name,
+      userId: user.id
+    })
+    .then(function (response) {
+      console.log(response);
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+  //  console.log(res.data)
+  }
+
 
   useEffect( () => {            
     const detectOutside = e => {            

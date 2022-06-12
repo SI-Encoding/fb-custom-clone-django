@@ -16,10 +16,8 @@ import PopupAttachment from '../../popupattachment/PopupAttachment'
 import {getDownloadURL, uploadBytes} from 'firebase/storage'
 import ErrorPopup from '../../error/ErrorPopUp'
 import UpdatePost from './updatepost/UpdatePost'
-import DeleteFromFirebaseCollection from '../../../../functions/Delete'
-import UpdatePostFav, {UpdatePostWithImage, UpdatePostWithNoAttachment} from '../../../../functions/Update'
-import UploadPostsWithGif, {UploadPostsWithImage} from '../../../../functions/Upload'
 
+import axios from 'axios'
 
 const Post = forwardRef(({id, profilePic, image, username, timestamp, message, favourite, userId},ref) =>{
   const user = useSelector((state) => (state.user))
@@ -51,7 +49,6 @@ const Post = forwardRef(({id, profilePic, image, username, timestamp, message, f
   const addToFavourite = (e) => {
     e.preventDefault()
     setFav(!fav)
-    UpdatePostFav('posts', id, fav)
   }
 
   const resetState = () => {
@@ -74,22 +71,22 @@ const Post = forwardRef(({id, profilePic, image, username, timestamp, message, f
 
   const deleteThis = (id) => {
     setUpdatePostPopUp(false)
-    DeleteFromFirebaseCollection('posts',id)
+    deletePost(id)
   }
     const editThis = () => {
-      setUpdatePostPopUp(true)
-    }
+    setUpdatePostPopUp(true)
+  }
 
     const postWithGif = () => {
-      UploadPostsWithGif('update',fileName, imageUrl, 'posts', id, input, user.picture, user.name, fav, true, user.id)
+      updatePostWithGif()
     }
   
     const postWithImage = () => {
-      UploadPostsWithImage('update',fileName, imageUrl, 'posts', id, input, user.picture, user.name, fav, true, user.id)
+      updatePostWithImage()
     }
   
     const postWithNoAttachment = () => {
-      UpdatePostWithNoAttachment('posts', id, input, user.picture, user.name, fav, false, user.id)
+      updatePostWithoutAttachment()
     }
 
     {/* update the post with new message */}
@@ -108,6 +105,71 @@ const Post = forwardRef(({id, profilePic, image, username, timestamp, message, f
           }
           resetState(); 
         }
+
+        async function deletePost(id) {
+          const res = await axios.delete(`/api/post/${id}`)
+        }
+
+        async function updatePostWithGif() {
+          uploadBytes(store, imageUrl).then(snapshot => {
+            return getDownloadURL(snapshot.ref)
+          }).then( async (downloadURL) => {
+        
+            const res = await axios.put(`/api/post/${id}`, {
+              message: input,
+              profilePic: user.picture,
+              username: user.name,
+              userId: user.id,
+              image: downloadURL,
+              gif: true
+            })
+            .then(function (response) {
+              console.log(response);
+            })
+            .catch(function (error) {
+              console.log(error);
+            });
+          })
+        }
+
+        async function updatePostWithImage() {
+          uploadBytes(store, imageUrl).then(snapshot => {
+            return getDownloadURL(snapshot.ref)
+          }).then( async (downloadURL) => {
+        
+            const res = await axios.put(`/api/post/${id}`, {
+              message: input,
+              profilePic: user.picture,
+              username: user.name,
+              userId: user.id,
+              image: downloadURL,
+              gif: false
+            })
+            .then(function (response) {
+              console.log(response);
+            })
+            .catch(function (error) {
+              console.log(error);
+            });
+          })
+        }
+
+        async function updatePostWithoutAttachment() {
+             await axios.put(`/api/post/${id}`, {
+              message: input,
+              profilePic: user.picture,
+              username: user.name,
+              userId: user.id,
+              image: '',
+              gif: false
+            })
+            .then(function (response) {
+              console.log(response);
+            })
+            .catch(function (error) {
+              console.log(error);
+            });
+        }
    
      {/* render the post */}
       return (
@@ -116,7 +178,7 @@ const Post = forwardRef(({id, profilePic, image, username, timestamp, message, f
             <Avatar src={profilePic} className='post_avatar'/>
               <div className='post_info_top'>
                 <h3>{username}</h3>
-                <p>{new Date(timestamp?.toDate()).toUTCString()}</p>        
+                <p>{new Date(timestamp).toUTCString()}</p>        
               </div>  
               {userId !== user.id ? '' : (<MenuIcon style={{color:'var(--fb-theme-colour-arrow)'}} onClick={()=> setOpen(!open)} className='menu_icon'/>)}   
           </div>
@@ -143,7 +205,7 @@ const Post = forwardRef(({id, profilePic, image, username, timestamp, message, f
           </div>
 
           {/* create a message */}    
-          <div onClick = {() => setWriteComment(!writeComment)} className={`post_option ${writeComment? 'active':'inactive'}`}>
+          <div /*onClick = {() => setWriteComment(!writeComment)}*/ className={`post_option ${writeComment? 'active':'inactive'}`}>
             <ChatBubbleOutlineIcon />
             <p>Comment</p>
           </div>
@@ -151,7 +213,7 @@ const Post = forwardRef(({id, profilePic, image, username, timestamp, message, f
             <NearMeIcon />
             <p>Share</p>
           </div>
-          <div onClick = {() => setDisplayComment(!displayComment) } className={`post_option ${displayComment? 'active' : 'inactive'}`}>
+          <div /*onClick = {() => setDisplayComment(!displayComment)}*/ className={`post_option ${displayComment? 'active' : 'inactive'}`}>
             <AccountCircleIcon/>
             <ExpandMoreOutlined className={`post_arrow ${displayComment? 'active' : 'inactive'}`}/>
           </div>
