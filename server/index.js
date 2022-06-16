@@ -6,18 +6,6 @@ const app = express();
 const db = require('./config/mongodb')
 const postRouter = require('./routes/posts-router')
 
-//const { MongoClient } = require('mongodb');
-//const uri = "mongodb+srv://<username>:<password>@<your-cluster-url>/sample_airbnb?retryWrites=true&w=majority";
-
-/*var corsOptions = {
-    origin: "http://localhost:8080"
-  };
-  app.use(cors(corsOptions));
-  // parse requests of content-type - application/json
-  app.use(bodyParser.json());
-  // parse requests of content-type - application/x-www-form-urlencoded
-  app.use(bodyParser.urlencoded({ extended: true }));*/
-  // simple route
   
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(cors())
