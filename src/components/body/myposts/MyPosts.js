@@ -14,9 +14,6 @@ function MyPosts() {
         let isMounted = true;
         
         if (isMounted) {
-           /* db.collection("posts").where("userId", "==", user.id).orderBy('timestamp', 'desc').onSnapshot((snapshot) => 
-            setPosts(snapshot.docs.map((doc) => ({ id: doc.id, data: doc.data()})))
-        );*/
         fetchPosts()
         }
         
@@ -26,9 +23,9 @@ function MyPosts() {
     },[]);
    
     async function fetchPosts() {
-        const res = await axios.get(`/api/your/posts/${user.id}`, {  params: {id: user.id}  })
+        const res = await axios.get(`/api/your/posts/${user.id}`)
         console.log(res.data)
-        setPosts(res.data.data)
+        setPosts(res.data)
     }
 
     return (
@@ -37,7 +34,7 @@ function MyPosts() {
                 <FlipMove typeName={null}>
                     <Post
                         key = {post._id}
-                        id = {post._id}
+                        id = {post.id}
                         profilePic = {post.profilePic}
                         message = {post.message}
                         timestamp = {post.createdAt}

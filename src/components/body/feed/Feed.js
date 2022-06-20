@@ -3,20 +3,16 @@ import './Feed.css'
 import StoryReel from './storyreel/StoryReel'
 import MessageSender from './messagesender/MessageSender'
 import Post from './post/Post'
-import db from '../../../firebase/firebase'
 import FlipMove from 'react-flip-move'
 import axios from 'axios'
 
 function Feed() {
-    const [posts,setPosts] = useState([]);
+    const [posts,setPosts] = useState([])
     
     useEffect( () => {
         let isMounted = true;
         
         if (isMounted) {
-            /*db.collection("posts").orderBy('timestamp', 'desc').onSnapshot((snapshot) => 
-            setPosts(snapshot.docs.map((doc) => ({ id: doc.id, data: doc.data()})))
-            );*/
             fetchPosts()
         }
 
@@ -26,9 +22,8 @@ function Feed() {
     },[]);
     
     async function fetchPosts() {
-        const res = await axios.get('/api/posts')
-        console.log(res.data)
-        setPosts(res.data.data)
+        const res = await axios.get('/api/post')
+        setPosts(res.data)
     }
 
     return (
@@ -39,7 +34,7 @@ function Feed() {
                 <FlipMove typeName={null}>
                     <Post
                         key = {post._id}
-                        id = {post._id}
+                        id = {post.id}
                         profilePic = {post.profilePic}
                         message = {post.message}
                         timestamp = {post.createdAt}

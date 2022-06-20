@@ -121,7 +121,7 @@ const Post = forwardRef(({id, profilePic, image, username, timestamp, message, f
               username: user.name,
               userId: user.id,
               image: downloadURL,
-              gif: true
+              gif: 'true'
             })
             .then(function (response) {
               console.log(response);
@@ -143,7 +143,7 @@ const Post = forwardRef(({id, profilePic, image, username, timestamp, message, f
               username: user.name,
               userId: user.id,
               image: downloadURL,
-              gif: false
+              gif: 'false'
             })
             .then(function (response) {
               console.log(response);

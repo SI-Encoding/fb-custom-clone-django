@@ -1,8 +1,8 @@
-# fb-custom-clone
+# fb-custom-clone-django
 
 ---
 
-This a single page application created using React.js library to create the user interface, and interacts with and stores data using Firebase services.
+This a single page application created using React.js library to create the user interface, and uses Django as the backend, which interacts with and stores data using MongoDb.
 The purpose of this application is to demonstrate CRUD functionalities mimicking common Facebook features.
 
 # Instructions to SETUP and RUN
@@ -25,9 +25,17 @@ The purpose of this application is to demonstrate CRUD functionalities mimicking
 1. Go to https://www.mongodb.com/atlas and create a database.
 2. Create yourself a user to access the database.
 3. Grab your connection string.
-4. rename .env.example to .env and replace the CONNECTION_STRING with yours.
-5. Run 'npm install'.
-6. Finally, run 'nodemon index.js'
+4. rename .env.example to .env and replace the CONNECTION_STRING with yours and DATABASE_NAME with the name you want.
+5.  pip install virtualenv.
+6. Create your own virtual environment 
+a. For Windows, run "virtualenv <YOUR_ENV_NAME>" 
+b. For iOS, run "python -m venv <YOUR_ENV_NAME>" 
+c. For Linux, run "python -m venv <YOUR_ENV_NAME>"
+7. Run the virtual environment 
+a. For Windows, run ".<YOUR_ENV_NAME>\Scripts\activate" 
+b. For iOS, run "source <YOUR_ENV_NAME>/bin/activate" 
+c. For Linux, run "source <YOUR_ENV_NAME>/bin/activate"
+8. To install run "pip install -r requirements.txt"
 
 # Getting Started with Create React App
 

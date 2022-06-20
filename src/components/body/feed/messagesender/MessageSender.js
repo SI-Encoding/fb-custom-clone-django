@@ -60,8 +60,8 @@ function MessageSender() {
       }              
     } else {              
        AddPostsWithoutImages()
-      } 
-      resetState();            
+    } 
+      resetState();          
   } 
 
   async function AddPostsWithGif() {
@@ -77,7 +77,7 @@ function MessageSender() {
         username: user.name,
         userId: user.id,
         image: downloadURL,
-        gif: true
+        gif: 'true'
       })
       .then(function (response) {
         console.log(response);
@@ -124,7 +124,6 @@ function MessageSender() {
     .catch(function (error) {
       console.log(error);
     });
-  //  console.log(res.data)
   }
 
 
