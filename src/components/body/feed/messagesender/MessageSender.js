@@ -25,7 +25,6 @@ function MessageSender() {
   const [error, setError] = useState(false)    
   const popupRef = useRef()    
   const errorPopUpRef = useRef()   
-  const storageRef = firebase.storage();
 
   const storageRef = firebase.storage();    
   let store = storageRef.ref(`/posts/${fileName}`);  
