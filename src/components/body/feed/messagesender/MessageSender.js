@@ -27,6 +27,8 @@ function MessageSender() {
   const errorPopUpRef = useRef()   
   const storageRef = firebase.storage();
 
+  const storageRef = firebase.storage();    
+  let store = storageRef.ref(`/posts/${fileName}`);  
 
   const resetState = () => {
     setInput('');  
@@ -48,9 +50,7 @@ function MessageSender() {
 
   const handleSubmit = e => {    
     e.preventDefault();
-    const storageRef = firebase.storage();    
-    let store = storageRef.ref(`/posts/${fileName}`);        
-
+          
     {/* Submit differently if file is uploaded */}
     if (imageUrl) {
       if(fileType === 'image/gif') {        
@@ -66,7 +66,6 @@ function MessageSender() {
 
   async function AddPostsWithGif() {
 
-    let store = storageRef.ref(`/posts/${fileName}`);
     uploadBytes(store, imageUrl).then(snapshot => {
       return getDownloadURL(snapshot.ref)
     }).then( async (downloadURL) => {
@@ -90,7 +89,6 @@ function MessageSender() {
 
   async function AddPostsWithImage() {
 
-  let store = storageRef.ref(`/posts/${fileName}`);
   uploadBytes(store, imageUrl).then(snapshot => {
     return getDownloadURL(snapshot.ref)
   }).then( async (downloadURL) => {
